@@ -1,0 +1,76 @@
+- name: Handling package differences to default installation
+  hosts: all
+  become: True
+  tasks:
+    - name: Removing unnecessary packages
+      apt: name={{ item }} state=absent purge=yes
+      with_items:
+        - command-not-found
+        - command-not-found-data
+        - python3-commandnotfound
+
+    - name: Upgrading the system
+      apt: upgrade=full update_cache=yes
+
+    - name: Setting up MATE ppa
+      apt_repository: repo='{{item}}'
+      with_items:
+        - ppa:ubuntu-mate-dev/ppa
+        - ppa:ubuntu-mate-dev/trusty-mate
+
+    - name: Installing additional packages
+      apt: name={{ item }} update_cache=yes
+      with_items:
+        - acl
+        - apcalc
+        - apt-file
+        - build-essential
+        - dconf-cli
+        - default-jdk
+        - default-jdk-doc
+        - diffstat
+        - dma
+        - dstat
+        - emacs24
+        - firefox
+        - geany
+        - gedit
+        - gettext
+        - git
+        - iotop
+        - ipython3
+        - jed
+        - joe
+        - light-themes
+        - lintian
+        - lua5.2
+        - mate-desktop-environment
+        - mate-desktop-environment-extras
+        - mc
+        - moreutils
+        - patchutils
+        - pv
+        - python-pip
+        - python-virtualenv
+        - rpm
+        - rxvt
+        - slay
+        - subversion
+        - sysstat
+        - x11-apps
+        - xbase-clients
+        - xfonts-terminus
+        - ubuntu-wallpapers
+        - ubuntu-wallpapers-trusty
+        - whois
+
+    - name: Downloading tigervnc
+      get_url:
+        url: https://bintray.com/artifact/download/tigervnc/stable/ubuntu-14.04LTS/amd64/tigervncserver_1.5.0-3ubuntu1_amd64.deb
+        dest: /tmp
+        sha256sum: c2f56581f2941d960b7f5ed974773f1f9ad620fdf77017307c95ff0c91e4b3a8
+      register: download
+
+    - apt: deb={{download.dest}}
+
+    - shell: apt-file update

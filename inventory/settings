@@ -1,0 +1,2 @@
+[ec2:vars]
+ansible_ssh_user = ubuntu

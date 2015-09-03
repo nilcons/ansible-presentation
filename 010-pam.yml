@@ -1,0 +1,16 @@
+- name: Set up PAM
+  hosts: all
+  become: True
+  tasks:
+    - name: No MOTD on login, ssh and su
+      replace:
+        dest: /etc/pam.d/{{item}}
+        regexp: '^([^#].*pam_motd.*)$'
+        replace: '# \1'
+      with_items: [ login, sshd, su ]
+    - name: No new mail on login, ssh and su
+      replace:
+        dest: /etc/pam.d/{{item}}
+        regexp: '^([^#].*pam_mail.*)$'
+        replace: '# \1'
+      with_items: [ login, sshd, su ]

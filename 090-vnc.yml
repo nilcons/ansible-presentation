@@ -1,0 +1,8 @@
+- name: Set up VNC at start
+  hosts: all
+  become: True
+  tasks:
+    - lineinfile:
+        dest: /etc/rc.local
+        line: "( sleep 42 ; sudo -i -u np vnc ) &"
+        insertbefore: "exit 0"

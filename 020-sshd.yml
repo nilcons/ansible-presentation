@@ -1,0 +1,17 @@
+- name: Set up the SSH daemon
+  hosts: all
+  become: True
+  tasks:
+    - name: Change some config options in sshd_config
+      replace:
+        dest: /etc/ssh/sshd_config
+        regexp: '^{{ item.key }}.*$'
+        replace: '{{ item.key }} {{ item.value }}'
+      with_dict:
+        PermitRootLogin: "yes"
+        PrintLastLog: "no"
+        PasswordAuthentication: "yes"
+      notify: ssh service
+  handlers:
+    - name: ssh service
+      service: name=ssh state=restarted

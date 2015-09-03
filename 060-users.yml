@@ -1,0 +1,13 @@
+- name: Configure users
+  hosts: all
+  become: True
+  tasks:
+    - user: name=np uid=1001 shell=/bin/bash
+    - user: name=errge uid=1002 shell=/bin/bash
+    - name: User np and errge can sudo wo password
+      copy:
+        mode: 0440
+        content: |
+          errge ALL=(ALL) NOPASSWD:ALL
+          np ALL=(ALL) NOPASSWD:ALL
+        dest: /etc/sudoers.d/10-np-errge

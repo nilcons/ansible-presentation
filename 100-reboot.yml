@@ -1,0 +1,5 @@
+- name: Reboot the machine and wait for VNC to come up
+  hosts: all
+  become: True
+  roles:
+    - { role: GROG.reboot, reboot_wait_port: 5900 }

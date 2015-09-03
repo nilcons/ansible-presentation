@@ -1,0 +1,9 @@
+- name: Set time zone
+  hosts: all
+  become: True
+  tasks:
+    - copy: content=Europe/Zurich\n dest=/etc/timezone
+      notify: update timezone
+  handlers:
+    - name: update timezone
+      command: dpkg-reconfigure --frontend noninteractive tzdata

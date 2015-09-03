@@ -1,0 +1,22 @@
+- name: set up the home directory of the np user
+  hosts: all
+  become: True
+  become_user: np
+  tasks:
+    - file: path=/home/np/bin state=directory
+    - file: path=/home/np/.vnc state=directory
+    - copy: src=files/xstartup dest=/home/np/.vnc/xstartup mode=0755
+    - copy: src=files/.emacs dest=/home/np/.emacs
+    - lineinfile:
+        dest: /home/np/.profile
+        insertafter: EOF
+        line: "{{ item }}"
+      with_items:
+        # -i 127.0.0.1 -SecurityTypes None
+        - "vnc () { tigervncserver :0 -geometry 1000x700 -depth 16 -AlwaysShared -SecurityTypes VncAuth -nolisten tcp -autokill; }"
+        - "if [ -f /opt/ceh/scripts/ceh-profile.sh ]; then export CEH_BUILD_MAX_JOBS=10; export CEH_GHC64=1; export PATH=~/.cabal/bin:$PATH; . /opt/ceh/scripts/ceh-profile.sh; fi"
+    - file: path=/home/np/.config/ipython/profile_default/startup state=directory
+    - copy: src=files/autoreload.ipy dest=/home/np/.config/ipython/profile_default/startup/
+    - copy: src=files/ceh-init.sh dest=/home/np/
+    - copy: src=files/dconf.dump dest=/home/np/.config/
+    - shell: dbus-launch --exit-with-session dconf load / < /home/np/.config/dconf.dump

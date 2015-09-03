@@ -1,0 +1,5 @@
+- name: Set up the correct papersize
+  hosts: all
+  become: True
+  tasks:
+    - copy: content=a4\n dest=/etc/papersize

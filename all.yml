@@ -1,0 +1,11 @@
+- include: 005-ufw.yml
+- include: 010-pam.yml
+- include: 020-sshd.yml
+- include: 030-packages.yml
+- include: 040-papersize.yml
+- include: 050-timezone.yml
+- include: 060-users.yml
+- include: 070-np.yml
+- include: 080-password.yml
+- include: 090-vnc.yml
+- include: 100-reboot.yml
